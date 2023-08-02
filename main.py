@@ -56,51 +56,63 @@ def post_instagram_story(api, image_path, track_name, artist_names, album_name, 
     time.sleep(5)
 
 
-playlist_id = []
-playlist_data = []
-tracks = []
-genre = ['jazz', 'pop', 'edm']
 
-instagram_username = "IG ID here"
-instagram_password = "IG PW here"
+track_name = [[] for _ in range(3)]
+artists = [[] for _ in range(3)]
+artist_names = [[] for _ in range(3)]
+album_name = [[] for _ in range(3)]
+album_image_url = [[] for _ in range(3)]
 
-if __name__ == "__main__":
-    token = get_token()
-
-    playlist_id.append("Your Playlist ID Here")
-    playlist_id.append("Your Playlist ID Here")
-    playlist_id.append("Your Playlist ID Here")
-
-    
-    index = int(input("Enter the index of the track you want to post on Instagram (1 to N): "))
-
+def download():
+    global playlist_id, playlist_data, tracks, track_name, artists, artist_names, album_name, album_image_url
     for i in range(3):
-        print(f"Genre:{genre[i]}")
+        print(f"Genre: {genre[i]}")
         playlist_data = get_songs_from_playlists(token, playlist_id[i])
         tracks = playlist_data['items']
         for idx, track in enumerate(tracks):
-            track_name = track['track']['name']
-            artists = track['track']['artists']
-            artist_names = ', '.join([artist['name'] for artist in artists])
-            album_name = track['track']['album']['name']
-            album_image_url = track['track']['album']['images'][0]['url']
+            track_name[i].append(track['track']['name'])
+            artists[i].append(track['track']['artists'])
+            artist_names[i].append(', '.join([artist['name'] for artist in track['track']['artists']]))
+            album_name[i].append(track['track']['album']['name'])
+            album_image_url[i].append(track['track']['album']['images'][0]['url'])
             image_path = f"{genre[i]}_{idx}.jpg"
             with open(image_path, 'wb') as f:
-                response = get(album_image_url)
+                response = get(album_image_url[i][idx])
                 f.write(response.content)
+            print(f"{idx+1}. {track_name[i][-1]} - {artist_names[i][-1]}")
 
-            print(f"{idx+1}. {track_name} - {artist_names}")
+def upload():
+    global count
+    api = login_instagram(instagram_username, instagram_password)
+    for i in range(3):
+        selected_track_name = track_name[i][count]
+        selected_artists = artists[i][count]
+        selected_artist_names = artist_names[i][count]
+        selected_album_name = album_name[i][count]
+        image_path = f"{genre[i]}_{count}.jpg"
+        post_instagram_story(api, image_path, selected_track_name, selected_artist_names, selected_album_name, i)
+    count += 1
 
-        if 1 <= index <= len(tracks):
-            selected_track = tracks[index - 1]
-            track_name = selected_track['track']['name']
-            artists = selected_track['track']['artists']
-            artist_names = ', '.join([artist['name'] for artist in artists])
-            album_name = selected_track['track']['album']['name']
-            album_image_url = selected_track['track']['album']['images'][0]['url']
-            image_path = f"{genre[i]}_{index-1}.jpg"
+playlist_id = []
+playlist_data = []
+tracks = []
 
-            api = login_instagram(instagram_username, instagram_password)
-            post_instagram_story(api, image_path, track_name, artist_names, album_name, i)
-            logout_instagram(api)
-            print("Instagram feed posted successfully!")
+
+genre = ['jazz', 'pop', 'edm']
+
+instagram_username = "Instagram ID"
+instagram_password = "Instagram PW"
+token = get_token()
+
+playlist_id.append("Playlist ID")
+playlist_id.append("Playlist ID")
+playlist_id.append("Playlist ID")
+
+count = 0
+download()
+while True:
+    now = datetime.datetime.now()
+    if now.hour == 0 and now.minute == 0:
+        upload()
+        print(f"{now.hour}:{now.minute}. Upload Completed")
+        time.sleep(60)
