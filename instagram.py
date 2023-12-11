@@ -1,5 +1,4 @@
 import instagrapi
-from instagrapi import Client
 
 import time
 import datetime
