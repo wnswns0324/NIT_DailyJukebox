@@ -17,7 +17,7 @@ Currently working on improving its stability
 Firebase DB Holds IDs of users that receive DM when new playlist is uploaded.
 **_Tag List_**
 
-```json
+```
 { usercount:(user count) },
 { count: (genre count) },
 { (user squence id1): (user id1) }
