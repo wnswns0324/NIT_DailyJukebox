@@ -4,11 +4,9 @@ Python, Spotify API, Instagrapi Based Daily track recommender.
 
 Installing Libraries:
 
-> pip install python-dotenv
-
-> pip install requests
-
-> pip install firebase-admin
+```bash
+pip install -r requirements.txt
+```
 
 Change Values in .env file
 
