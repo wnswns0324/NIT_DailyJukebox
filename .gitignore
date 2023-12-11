@@ -1,1 +1,3 @@
 .env
+album/*
+__pycache__
