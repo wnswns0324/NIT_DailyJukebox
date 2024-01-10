@@ -6,9 +6,15 @@ Installing Libraries:
 > pip install -r requirements.txt
 
 
+You can search instagram
+
+@nit_dailyjukebox
+
+to see how the code runs
+
+
 Change Values in .env file
 
 Currently working on improving its stability
 
-Firebase DB Holds counts(index) of users that receive DM when new playlist is uploaded.
-Starts with 0, and increases every time new recommendation is uploaded
+Sending DM is deleted due to bot detection danger of instagram. sending same/similar message many times, there is a high probability of account being banned.
